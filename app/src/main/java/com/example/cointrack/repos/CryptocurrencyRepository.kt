@@ -7,7 +7,7 @@ class CryptocurrencyRepository {
 
     suspend fun fetchCryptoData(): CryptoModel {
         val endUrl = "listings/latest"
-        return NetworkService.cryptocurrencyServiceApi
+        return NetworkService.serviceApi
             .getCryptocurrency(endUrl)
     }
 }

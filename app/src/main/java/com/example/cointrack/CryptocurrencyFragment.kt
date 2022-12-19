@@ -7,15 +7,20 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
+import com.example.cointrack.networks.NetworkManager
 import com.example.cointrack.viewmodels.CryptocurrencyViewModel
 
 class CryptocurrencyFragment : Fragment() {
     private val cryptocurrencyViewModel : CryptocurrencyViewModel by activityViewModels()
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        cryptocurrencyViewModel.fetchData()
+
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+
+        context?.let {
+            if(NetworkManager.isNetConnectionAvailable(it))
+                    cryptocurrencyViewModel.fetchData()
+         }
+
         cryptocurrencyViewModel.cryptoLiveData.observe(viewLifecycleOwner) {
             Log.d("CryptocurrencyFragment", it.data[0].name)
         }
