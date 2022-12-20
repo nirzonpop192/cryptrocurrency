@@ -13,9 +13,11 @@ fun getInstance():Retrofit{
     val  logging :HttpLoggingInterceptor=HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY)
     val  httpClient:OkHttpClient.Builder= OkHttpClient.Builder()
     httpClient.addInterceptor(logging)
-    httpClient.addInterceptor{
-            chain ->
-        val request: Request = chain.request().newBuilder().addHeader("X-CMC_PRO_API_KEY", cryptocurrency_api_key).build()
+    httpClient.addInterceptor{ chain ->
+        val request: Request = chain.request()
+            .newBuilder()
+            .addHeader("X-CMC_PRO_API_KEY", cryptocurrency_api_key)
+            .build()
         chain.proceed(request)
     }
 

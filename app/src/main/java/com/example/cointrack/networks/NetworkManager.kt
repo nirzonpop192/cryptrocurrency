@@ -8,6 +8,7 @@ import android.util.Log
 class NetworkManager {
  companion object{
      fun isNetConnectionAvailable(context: Context): Boolean {
+
          val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
          val capabilities = connectivityManager.getNetworkCapabilities(connectivityManager.activeNetwork)
          if (capabilities != null) {
