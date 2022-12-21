@@ -32,19 +32,11 @@ abstract class CurrencyDatabase : RoomDatabase() {
         private val roomCallback = object : Callback() {
             override fun onCreate(db: SupportSQLiteDatabase) {
                 super.onCreate(db)
-//                populateDatabase(instance!!)
-            }
-        }
-
-        private fun populateDatabase(db: CurrencyDatabase) {
-            val noteDao = db.currencyDao()
-            subscribeOnBackground {
-//                noteDao.insert(Note("title 1", "desc 1", 1))
-//                noteDao.insert(Note("title 2", "desc 2", 2))
-//                noteDao.insert(Note("title 3", "desc 3", 3))
 
             }
         }
+
+
     }
 
 

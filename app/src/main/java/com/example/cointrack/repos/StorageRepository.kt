@@ -31,8 +31,14 @@ class StorageRepository(application: Application) {
     }
 
     fun getAllCurrency(): LiveData<List<Currency>> {
-        allCurrency = currencyDao.getAllCurrency()
+        allCurrency = currencyDao.getAllCurrencyAvarage()
         return allCurrency
     }
+
+    fun getTotalNumber(): Int{
+        return currencyDao.getTotalNumber()
+
+    }
+
 
 }

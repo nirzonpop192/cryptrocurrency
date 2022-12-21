@@ -10,49 +10,58 @@ import com.example.cointrack.models.CryptoModel
 import com.example.cointrack.models.Currency
 import com.example.cointrack.repos.CryptocurrencyRepository
 import com.example.cointrack.repos.StorageRepository
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class CryptocurrencyViewModel : ViewModel() {
+
     private val repository = CryptocurrencyRepository()
-
-   companion object {
-       var cryptoLiveData : MutableLiveData<CryptoModel> = MutableLiveData()
-   }
     lateinit var allCryLiveData : LiveData<List<Currency>>
+    var isDataBaseEmpty : MutableLiveData<Boolean> = MutableLiveData()
+    var isLoading : MutableLiveData<Boolean> = MutableLiveData()
 
-    init {
-//        allCryLiveData= StorageRepository(application).getAllCurrency()
-    }
+
+    companion object {
+
+       var cryptoLiveData : MutableLiveData<CryptoModel> = MutableLiveData()
+        private   val TAG:String= CryptocurrencyViewModel::class.java.name
+   }
+
+
     fun fetchData() {
+        //isLoading.value=true
         viewModelScope.launch {
             try {
                 cryptoLiveData.value = repository.fetchCryptoData()
             }catch (e : Exception) {
-                Log.d("CryptocurrencyViewModel", e.localizedMessage)
+                Log.d(TAG, e.localizedMessage)
             }
         }
     }
-
-
-//    private val repository = NoteRepository(app)
-//    private val allNotes = repository.getAllNotes()
 
     fun insert(application: Application,currency: Currency) {
         StorageRepository(application).insert(currency)
     }
 
     fun getAllCurrency(application: Application): LiveData<List<Currency>> {
-
-//        viewModelScope.launch {
-//            try {
-//                allCryLiveData = StorageRepository(application).getAllCurrency()
-//            }catch (e : Exception) {
-//                Log.d("CryptocurrencyViewModel", e.localizedMessage)
-//            }
-//        }
         allCryLiveData=StorageRepository(application).getAllCurrency()
 
         return allCryLiveData
-//        return StorageRepository(application).getAllCurrency()
+
     }
+
+    fun isDBEmpty(application: Application) :Boolean{
+             var  flag=false
+        viewModelScope.launch(Dispatchers.Main) {
+            try {
+                flag=StorageRepository(application).getTotalNumber()==0
+
+            }catch (e : Exception) {
+                Log.d(TAG, e.localizedMessage)
+            }
+        }
+        Log.e(TAG,"is db empty :"+flag)
+        return flag
+    }
+
 }

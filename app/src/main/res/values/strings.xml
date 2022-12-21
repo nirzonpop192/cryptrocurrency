@@ -1,5 +1,5 @@
 <resources>
     <string name="app_name">COIN TRACK</string>
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="label">Please setup Timer between 1 to 15</string>
 </resources>

@@ -9,46 +9,49 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.annotation.Nullable
+import android.widget.ProgressBar
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.observe
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.cointrack.adapter.CurrencyAdapter
 import com.example.cointrack.models.Currency
+import com.example.cointrack.networks.NetworkManager
 import com.example.cointrack.service.ServerJobService
 import com.example.cointrack.utils.getCurrentDateTime
 import com.example.cointrack.utils.toString
 import com.example.cointrack.viewmodels.CryptocurrencyViewModel
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 class CryptocurrencyFragment : Fragment() {
-//     private val viewModel : CryptocurrencyViewModel by activityViewModels()
+
      private val viewModel : CryptocurrencyViewModel by activityViewModels()
 
     private lateinit var jobScheduler:JobScheduler
+
     companion object {
         const val JOB_ID:Int =123
-         val TAG:String= CryptocurrencyFragment.javaClass.name
+        val TAG:String= CryptocurrencyFragment.javaClass.name
     }
+
+    lateinit var recyclerview:RecyclerView
+    lateinit var progressBarView :ProgressBar
+    lateinit var fabtnTimer :FloatingActionButton
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
 
-         val view :View= inflater.inflate(R.layout.fragment_cryptocurrency, container, false)
+        val view: View = inflater.inflate(R.layout.fragment_cryptocurrency, container, false)
 
         // getting the recyclerview by its id
-        val recyclerview = view.findViewById<RecyclerView>(R.id.recyclerview)
-
+         recyclerview = view.findViewById<RecyclerView>(R.id.recyclerview)
+         progressBarView = view.findViewById<ProgressBar>(R.id.simpleProgressBar)
+        fabtnTimer=view.findViewById<FloatingActionButton>(R.id.fabtn_timer)
         // this creates a vertical layout Manager
         recyclerview.layoutManager = LinearLayoutManager(context)
-
-        // ArrayList of class ItemsViewModel
-//        val data = ArrayList<ItemsViewModel>()
-
-        // This loop will create 20 Views containing
-        // the image with the count of view
 
 
         // This will pass the ArrayList to our Adapter
@@ -57,48 +60,44 @@ class CryptocurrencyFragment : Fragment() {
         recyclerview.setHasFixedSize(true)
         // Setting the Adapter with the recyclerview
         recyclerview.adapter = adapter
-//        if(NetworkManager.isNetConnectionAvailable(this))
-//        viewModel.fetchData()
 
-//        viewModel.getAllCurrency(requireActivity().application).observe()
-//        viewModel.allCryLiveData.observe(viewLifecycleOwner) {
-//            Log.e(TAG," size ${it.size}");
-////            Log.d("CryptocurrencyFragment", it.data[0].name)
-//        }
+        viewModel.isDBEmpty(requireActivity().application)
+        viewModel.isDataBaseEmpty.observe(viewLifecycleOwner, Observer { it->
+            if (it) {
+                if (NetworkManager.isNetConnectionAvailable(requireContext())){
+                    viewModel.isLoading.value=true
+                    viewModel.fetchData()
 
-//        viewModel.allCryLiveData.observe(viewLifecycleOwner, object : Observer<List<Currency?>?> {
-//            override fun onChanged(@Nullable notes: List<Currency?>?) {
-//                if (notes!=null)
-//                adapter.setCurrency(notes as List<Currency>)
-//                Log.e(TAG," size ${notes?.size}");
-//            }
-//        })
+                }
+            }
+        })
 
-//        viewModel.allCryLiveData.observe(viewLifecycleOwner) { profiles ->
-//            if (profiles == null) return@observe
-//
-//
-//            Log.e(TAG," profiles size ${profiles?.size}");
-//            // you now have access to profiles, can even save them to the side and stuff
-//            adapter.setCurrency(profiles as List<Currency>)
-//        }
-viewModel.getAllCurrency(requireActivity().application).observe(viewLifecycleOwner,
-Observer { use->  Log.e(TAG," use size ${use?.size}");
-    adapter.setCurrency(use)
+        viewModel.isLoading.observe(viewLifecycleOwner, Observer { flag->
+            if(flag)
+                progressBarView.visibility=View.VISIBLE
+            else
+                progressBarView.visibility=View.INVISIBLE
+        })
 
-})
-//        viewModel.allCryLiveData.observe(viewLifecycleOwner, Observer {
-//                user -> adapter.setCurrency(user)
-//
-//        })
-//        viewModel.allCryLiveData.observe(viewLifecycleOwner, onChanged =  )
+            viewModel.getAllCurrency(requireActivity().application).observe(viewLifecycleOwner, Observer { use->
+
+                Log.e(TAG," use size ${use?.size}");
+                      viewModel.isLoading.value=false
+                adapter.setCurrency(use)
+
+            })
+
+
         return view
     }
 
     override  fun onResume() {
         super.onResume()
 
-        stratJobscheduler()
+        stratJobScheduler()
+        fabtnTimer.setOnClickListener {
+            findNavController().navigate(R.id.action_cryptocurrencyFragment_to_timerSetterFragment)
+        }
 
         CryptocurrencyViewModel.cryptoLiveData.observe(viewLifecycleOwner) {
 
@@ -110,11 +109,11 @@ Observer { use->  Log.e(TAG," use size ${use?.size}");
                 viewModel.insert(application = requireActivity().application,currency)
 
             }
-
+            viewModel.isLoading.value=false
 
         }
     }
-    fun  stratJobscheduler(){
+    fun  stratJobScheduler(){
         val  componentName =  ComponentName(requireContext(), ServerJobService::class.java)
 
         val  info: JobInfo = JobInfo.Builder(JOB_ID,componentName)

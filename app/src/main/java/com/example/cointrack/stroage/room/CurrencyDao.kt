@@ -21,4 +21,11 @@ interface CurrencyDao {
 
     @Query("select * from currency_table order by name desc")
     fun getAllCurrency(): LiveData<List<Currency>>
+
+    @Query("SELECT  count(*) FROM  currency_table")
+    fun getTotalNumber(): Int
+
+
+    @Query("select name, symbol , avg  (usdPrice) as usdPrice , entryDateTime from currency_table GROUP by name ORDER by id")
+    fun getAllCurrencyAvarage(): LiveData<List<Currency>>
 }

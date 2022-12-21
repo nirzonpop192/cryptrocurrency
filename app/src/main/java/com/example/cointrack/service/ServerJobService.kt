@@ -4,6 +4,7 @@ import android.app.job.JobParameters
 import android.app.job.JobService
 import android.os.Handler
 import android.util.Log
+import android.widget.Toast
 import com.example.cointrack.CryptocurrencyFragment
 import com.example.cointrack.networks.NetworkManager
 import com.example.cointrack.repos.CryptocurrencyRepository
@@ -34,7 +35,7 @@ class ServerJobService: JobService() {
         Log.e(TAG,"onStartJob")
         val prefs = customPreference(this)
 
-        val timer=+prefs.timer
+        val timer=prefs.timer
         delay=timer*miliSecon
 
         Log.e(TAG, "in Job  timer $timer")
@@ -44,12 +45,13 @@ class ServerJobService: JobService() {
 
             handler.postDelayed(runnable!!, delay.toLong())
 
+            Toast.makeText(this,"fetching data from server ",Toast.LENGTH_LONG).show()
             Log.e(TAG, "network call ")
-//                  scope.launch {
-//                      withContext(Dispatchers.Main){
-//                          CryptocurrencyViewModel.cryptoLiveData.value=repository.fetchCryptoData() }
-//
-//                  }
+                  scope.launch {
+                      withContext(Dispatchers.Main){
+                          CryptocurrencyViewModel.cryptoLiveData.value=repository.fetchCryptoData() }
+
+                  }
 
         }.also { runnable=it },delay.toLong())
 

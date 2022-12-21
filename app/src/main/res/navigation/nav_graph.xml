@@ -9,5 +9,18 @@
         android:id="@+id/cryptocurrencyFragment"
         android:name="com.example.cointrack.CryptocurrencyFragment"
         android:label="fragment_cryptocurrency"
-        tools:layout="@layout/fragment_cryptocurrency" />
+        tools:layout="@layout/fragment_cryptocurrency" >
+        <action
+            android:id="@+id/action_cryptocurrencyFragment_to_timerSetterFragment"
+            app:destination="@id/timerSetterFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/timerSetterFragment"
+        android:name="com.example.cointrack.TimerSetterFragment"
+        android:label="fragment_timer_setter"
+        tools:layout="@layout/fragment_timer_setter" >
+        <action
+            android:id="@+id/action_timerSetterFragment_to_cryptocurrencyFragment"
+            app:destination="@id/cryptocurrencyFragment" />
+    </fragment>
 </navigation>

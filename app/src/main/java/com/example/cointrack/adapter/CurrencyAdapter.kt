@@ -35,12 +35,12 @@ class CurrencyAdapter()
 
             with(getItem(position)) {
             holder.tvCurrencyName.text = name
-            holder.tvSymbol.text = symbol
-            holder.tvPrice.text = "$ "+usdPrice.toString()
+            holder.tvSymbol.text = symbol + " update on " + entryDateTime
+            holder.tvPrice.text = "$ "+String.format("%.3f",usdPrice).toDouble().toString()
         }
     }
 
-    fun getNoteAt(position: Int) = getItem(position)
+    fun getCurrencyAt(position: Int) = getItem(position)
 
             private fun getItem(position: Int):Currency{
                 return currencyList.get(position)
