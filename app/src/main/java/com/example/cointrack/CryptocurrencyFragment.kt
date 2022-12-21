@@ -29,24 +29,7 @@ class CryptocurrencyFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
-        val  componentName =  ComponentName(requireContext(), ServerJobService::class.java)
 
-        val  info: JobInfo = JobInfo.Builder(JOB_ID,componentName)
-            .setRequiresCharging(true)
-            .setRequiredNetworkType(JobInfo.NETWORK_TYPE_UNMETERED)
-            .setPersisted(true)
-            .setPeriodic(1*1000)
-            .build()
-
-        jobScheduler= requireContext().getSystemService(Context.JOB_SCHEDULER_SERVICE) as JobScheduler
-
-        val resultCode=jobScheduler.schedule(info)
-
-        if (resultCode==JobScheduler.RESULT_SUCCESS) Log.e(TAG,"job scheduler success")
-
-        else if(resultCode==JobScheduler.RESULT_FAILURE) Log.e(TAG,"job scheduler failed")
-
-        else Log.e(TAG,"job scheduler")
 
         CryptocurrencyViewModel.cryptoLiveData.observe(viewLifecycleOwner) {
             Log.e("CryptocurrencyFragment", it.data[0].name)
@@ -56,10 +39,7 @@ class CryptocurrencyFragment : Fragment() {
 
     override  fun onResume() {
         super.onResume()
-//        handler.postDelayed(runnable!!, delay.toLong())
-//        cryptocurrencyViewModel.cryptoLiveData.observe(viewLifecycleOwner) {
-//            Log.d("CryptocurrencyFragment", it.data[0].name)
-//        }.also { runnable = it }, delay.toLonng())
+
 
 
             val  componentName =  ComponentName(requireContext(), ServerJobService::class.java)
@@ -70,7 +50,7 @@ class CryptocurrencyFragment : Fragment() {
                     .setRequiredNetworkType(JobInfo.NETWORK_TYPE_UNMETERED)
                     .setPersisted(true)
                     //.setPeriodic(10*1000)
-                   .setOverrideDeadline(20*1000)
+                   .setOverrideDeadline(1*60*1000)
                     .build()
 
                  jobScheduler= requireContext().getSystemService(Context.JOB_SCHEDULER_SERVICE) as JobScheduler

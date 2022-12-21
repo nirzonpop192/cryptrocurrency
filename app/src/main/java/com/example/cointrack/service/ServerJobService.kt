@@ -7,6 +7,8 @@ import android.util.Log
 import com.example.cointrack.CryptocurrencyFragment
 import com.example.cointrack.networks.NetworkManager
 import com.example.cointrack.repos.CryptocurrencyRepository
+import com.example.cointrack.stroage.PreferenceHelper.customPreference
+import com.example.cointrack.stroage.PreferenceHelper.timer
 import com.example.cointrack.viewmodels.CryptocurrencyViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -23,12 +25,20 @@ class ServerJobService: JobService() {
     val repository = CryptocurrencyRepository()
      companion object {
         val TAG:String = ServerJobService.javaClass.name
-        const val delay = 1*60*1000
+         var delay = 0
+         const val miliSecon=60*1000
     }
     override fun onStartJob(params: JobParameters?): Boolean {
 
 
         Log.e(TAG,"onStartJob")
+        val prefs = customPreference(this)
+
+        val timer=+prefs.timer
+        delay=timer*miliSecon
+
+        Log.e(TAG, "in Job  timer $timer")
+        Log.e(TAG, "in Job  delay $delay")
 
         handler.postDelayed(Runnable {
 
@@ -42,28 +52,7 @@ class ServerJobService: JobService() {
                   } //   CryptocurrencyFragment().cryptocurrencyViewModel.fetchData()
 
         }.also { runnable=it },delay.toLong())
-//        handler.post( Runnable {
-//            if(NetworkManager.isNetConnectionAvailable(this))
-//                CryptocurrencyFragment().cryptocurrencyViewModel.fetchData()
-//
-//        })
-//        handler.postDelayed()
 
-//        Thread(Runnable {
-//            for (i in 0..9) {
-//                Log.e(TAG, "run: $i")
-//                if (jobCancelled) {
-//                    return@Runnable
-//                }
-//                try {
-//                    Thread.sleep(1000)
-//                } catch (e: InterruptedException) {
-//                    e.printStackTrace()
-//                }
-//            }
-//            Log.e(TAG, "Job finished")
-//           // jobFinished(params, false)
-//        }).start()
 
         return  true
     }
