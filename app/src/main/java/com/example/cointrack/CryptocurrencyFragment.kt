@@ -14,12 +14,16 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.getSystemService
 import androidx.fragment.app.activityViewModels
+import com.example.cointrack.models.CurrencyStorageDM
 import com.example.cointrack.networks.NetworkManager
 import com.example.cointrack.service.ServerJobService
+import com.example.cointrack.utils.getCurrentDateTime
+import com.example.cointrack.utils.toString
 import com.example.cointrack.viewmodels.CryptocurrencyViewModel
 
 class CryptocurrencyFragment : Fragment() {
-     val cryptocurrencyViewModel : CryptocurrencyViewModel by activityViewModels()
+//     private val viewModel : CryptocurrencyViewModel by activityViewModels()
+     private val viewModel : CryptocurrencyViewModel by activityViewModels()
 
     private lateinit var jobScheduler:JobScheduler
     companion object {
@@ -29,10 +33,18 @@ class CryptocurrencyFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
+ CryptocurrencyViewModel.cryptoLiveData.observe(viewLifecycleOwner) {
+
+            for (item in it.data){
+                Log.e(TAG, item.name)
+                val date = getCurrentDateTime()
+                val dateInString = date.toString("yyyy/MM/dd HH:mm:ss")
+                val currency: CurrencyStorageDM=  CurrencyStorageDM(item.name, item.quote.uSD.price,item.symbol,dateInString)
+                viewModel.insert(application = requireActivity().application,currency)
+
+            }
 
 
-        CryptocurrencyViewModel.cryptoLiveData.observe(viewLifecycleOwner) {
-            Log.e("CryptocurrencyFragment", it.data[0].name)
         }
         return inflater.inflate(R.layout.fragment_cryptocurrency, container, false)
     }
