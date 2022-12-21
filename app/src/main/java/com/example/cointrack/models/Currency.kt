@@ -5,7 +5,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 @Entity(tableName = "currency_table")
-data class CurrencyStorageDM(
+data class Currency(
 
     @ColumnInfo(name = "name") val name: String,
     @ColumnInfo(name = "usdPrice") val usdPrice: Double,

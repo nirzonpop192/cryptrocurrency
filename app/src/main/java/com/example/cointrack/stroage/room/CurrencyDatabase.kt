@@ -5,10 +5,10 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.sqlite.db.SupportSQLiteDatabase
-import com.example.cointrack.models.CurrencyStorageDM
+import com.example.cointrack.models.Currency
 import com.example.cointrack.utils.subscribeOnBackground
 
-@Database(entities = [CurrencyStorageDM::class], version = 1)
+@Database(entities = [Currency::class], version = 2)
 abstract class CurrencyDatabase : RoomDatabase() {
 
     abstract fun currencyDao(): CurrencyDao
@@ -20,7 +20,7 @@ abstract class CurrencyDatabase : RoomDatabase() {
         fun getInstance(ctx: Context): CurrencyDatabase {
             if(instance == null)
                 instance = Room.databaseBuilder(ctx.applicationContext, CurrencyDatabase::class.java,
-                    "note_database")
+                    "currency_database")
                     .fallbackToDestructiveMigration()
                     .addCallback(roomCallback)
                     .build()

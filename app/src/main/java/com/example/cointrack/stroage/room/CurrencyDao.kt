@@ -2,23 +2,23 @@ package com.example.cointrack.stroage.room
 
 import androidx.lifecycle.LiveData
 import androidx.room.*
-import com.example.cointrack.models.CurrencyStorageDM
+import com.example.cointrack.models.Currency
 
 @Dao
 interface CurrencyDao {
 
     @Insert
-    fun insert(note: CurrencyStorageDM)
+    fun insert(note: Currency)
 
     @Update
-    fun update(note: CurrencyStorageDM)
+    fun update(note: Currency)
 
     @Delete
-    fun delete(note: CurrencyStorageDM)
+    fun delete(note: Currency)
 
     @Query("delete from currency_table")
     fun deleteAllNotes()
 
     @Query("select * from currency_table order by name desc")
-    fun getAllNotes(): LiveData<List<CurrencyStorageDM>>
+    fun getAllCurrency(): LiveData<List<Currency>>
 }

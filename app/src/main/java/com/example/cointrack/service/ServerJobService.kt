@@ -44,12 +44,12 @@ class ServerJobService: JobService() {
 
             handler.postDelayed(runnable!!, delay.toLong())
 
-                if(NetworkManager.isNetConnectionAvailable(this))
-                  scope.launch {
-                      withContext(Dispatchers.Main){
-                          CryptocurrencyViewModel.cryptoLiveData.value=repository.fetchCryptoData() }
-
-                  } //   CryptocurrencyFragment().cryptocurrencyViewModel.fetchData()
+            Log.e(TAG, "network call ")
+//                  scope.launch {
+//                      withContext(Dispatchers.Main){
+//                          CryptocurrencyViewModel.cryptoLiveData.value=repository.fetchCryptoData() }
+//
+//                  }
 
         }.also { runnable=it },delay.toLong())
 
@@ -59,7 +59,7 @@ class ServerJobService: JobService() {
 
     override fun onStopJob(p0: JobParameters?): Boolean {
         Log.e(TAG,"onStopJob")
-//        handler.removeCallbacks(runnable!!)
+        handler.removeCallbacks(runnable!!)
         jobCancelled=true
         return true
     }
