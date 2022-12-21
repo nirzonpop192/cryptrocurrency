@@ -48,8 +48,8 @@ class CryptocurrencyFragment : Fragment() {
 
         else Log.e(TAG,"job scheduler")
 
-        cryptocurrencyViewModel.cryptoLiveData.observe(viewLifecycleOwner) {
-            Log.d("CryptocurrencyFragment", it.data[0].name)
+        CryptocurrencyViewModel.cryptoLiveData.observe(viewLifecycleOwner) {
+            Log.e("CryptocurrencyFragment", it.data[0].name)
         }
         return inflater.inflate(R.layout.fragment_cryptocurrency, container, false)
     }
@@ -65,10 +65,12 @@ class CryptocurrencyFragment : Fragment() {
             val  componentName =  ComponentName(requireContext(), ServerJobService::class.java)
 
                val  info: JobInfo = JobInfo.Builder(JOB_ID,componentName)
-                    .setRequiresCharging(true)
+                   .setMinimumLatency(1)
+                    .setRequiresCharging(false)
                     .setRequiredNetworkType(JobInfo.NETWORK_TYPE_UNMETERED)
                     .setPersisted(true)
-                    .setPeriodic(1*1000)
+                    //.setPeriodic(10*1000)
+                   .setOverrideDeadline(20*1000)
                     .build()
 
                  jobScheduler= requireContext().getSystemService(Context.JOB_SCHEDULER_SERVICE) as JobScheduler

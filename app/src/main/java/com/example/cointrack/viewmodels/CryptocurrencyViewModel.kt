@@ -6,14 +6,16 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.cointrack.models.CryptoModel
 import com.example.cointrack.repos.CryptocurrencyRepository
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
 class CryptocurrencyViewModel : ViewModel() {
     val repository = CryptocurrencyRepository()
-    val cryptoLiveData : MutableLiveData<CryptoModel> = MutableLiveData()
+   companion object {var cryptoLiveData : MutableLiveData<CryptoModel> = MutableLiveData()}
 
     fun fetchData() {
-        viewModelScope.launch {
+        GlobalScope.launch(Dispatchers.IO) {
             try {
                 cryptoLiveData.value = repository.fetchCryptoData()
             }catch (e : Exception) {
