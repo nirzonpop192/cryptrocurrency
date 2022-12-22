@@ -21,7 +21,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <SeekBar
-        android:max="16"
+        android:max="15"
         android:min="1"
         android:id="@+id/seekBar"
         android:layout_width="match_parent"

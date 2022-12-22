@@ -8,6 +8,7 @@
 
 
     <ProgressBar
+        android:layout_marginTop="30dp"
         android:id="@+id/simpleProgressBar"
         style="@style/Widget.AppCompat.ProgressBar.Horizontal"
         android:layout_width="match_parent"
